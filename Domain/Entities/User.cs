@@ -14,4 +14,6 @@ namespace Financeasy.Api.Domain.Entities
         public DateTime RegisterDate { get; set; }
         public DateTime? UpdateDate { get; set; }
     }
+
+
 }

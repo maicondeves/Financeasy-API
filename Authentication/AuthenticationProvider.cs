@@ -26,7 +26,7 @@ namespace Financeasy.Api.Authentication
                 IsAuthenticated = false,
                 UserId = 0,
                 StatusCode = HttpStatusCode.Unauthorized,
-                Message = "Usuário e/ou senha inválidos."
+                Message = "Não autorizado."
             };
         }
 

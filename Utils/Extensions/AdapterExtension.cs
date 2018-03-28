@@ -1,7 +1,5 @@
 ﻿using System;
-using Financeasy.Api.Applications;
 using Financeasy.Api.Authentication;
-using Financeasy.Api.Core.DI;
 using Financeasy.Api.Domain.Entities;
 using Financeasy.Api.Domain.Enums;
 using Financeasy.Api.Domain.Models;
@@ -11,6 +9,24 @@ namespace Financeasy.Api.Utils.Extensions
     public static class AdapterExtension
     {
         /// <summary>
+        /// UserRegisterModel to User
+        /// </summary>
+        public static User ToEntity(this UserRegisterModel model)
+        {
+            return new User()
+            {
+                Id = 0,
+                Name = model.Name.Trim(),
+                Email = model.Email.Trim(),
+                Password = Cryptography.BlowfishHash(model.Password.Trim()),
+                Attempts = 0,
+                Status = UserStatus.Active,
+                RegisterDate = DateTime.Now,
+                UpdateDate = null
+            };
+        }
+
+        /// <summary>
         /// UserPostModel to User
         /// </summary>
         public static User ToEntity(this UserPostModel model)
@@ -18,11 +34,11 @@ namespace Financeasy.Api.Utils.Extensions
             return new User()
             {
                 Id = 0,
-                Name = model.Name,
-                Email = model.Email,
-                Password = Cryptography.BlowfishHash(model.Password),
+                Name = model.Name.Trim(),
+                Email = model.Email.Trim(),
+                Password = Cryptography.BlowfishHash(model.Password.Trim()),
                 Attempts = 0,
-                Status = UserStatus.NotConfirmed,
+                Status = UserStatus.Active,
                 RegisterDate = DateTime.Now,
                 UpdateDate = null
             };
@@ -43,6 +59,17 @@ namespace Financeasy.Api.Utils.Extensions
                 Status = UserStatus.Active,
                 RegisterDate = currentUser.RegisterDate,
                 UpdateDate = DateTime.Now
+            };
+        }
+
+        public static UserProfileModel ToModel(this User user)
+        {
+            return new UserProfileModel()
+            {
+                Email = user.Email,
+                Name = user.Name,
+                RegisterDate = user.RegisterDate,
+                UpdateDate = user.UpdateDate
             };
         }
 

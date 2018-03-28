@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Financeasy.Api.Authentication;
 using Financeasy.Api.Core;
 using Financeasy.Api.Core.DI;
 using Financeasy.Api.Domain.Entities;
+using Financeasy.Api.Domain.Enums;
 using Financeasy.Api.Domain.Models;
 using Financeasy.Api.Persistence.Repositories;
 using Financeasy.Api.Utils.Extensions;
+using Financeasy.Api.Utils.Validations;
 
 namespace Financeasy.Api.Applications
 {
@@ -17,9 +20,6 @@ namespace Financeasy.Api.Applications
 
         public OperationResult Insert(UserPostModel userModel)
         {
-            if (_repository.GetAll().Where(x => x.Email.Trim() == userModel.Email).ToList().Count > 0)
-                return new OperationResult(false, "Este email já está sendo utilizado por outro usuário.");
-
             var user = userModel.ToEntity();
             return Insert(user);
         }
@@ -30,11 +30,11 @@ namespace Financeasy.Api.Applications
             {
                 _repository.Insert(user);
                 _repository.Save();
-                return new OperationResult(true, "Usuário adicionado com sucesso.");
+                return new OperationResult(true, "Usuário inserido com sucesso.");
             }
             catch (Exception e)
             {
-                return new OperationResult(true, e.Message);
+                return new OperationResult(false, e.Message);
             }
         }
 
@@ -56,6 +56,7 @@ namespace Financeasy.Api.Applications
         {
             try
             {
+                user.UpdateDate = DateTime.Now;
                 _repository.Update(user);
                 _repository.Save();
                 return new OperationResult(true, "Usuário atualizado com sucesso.");
@@ -86,5 +87,85 @@ namespace Financeasy.Api.Applications
         public User FindByEmail(string email) => _repository.GetAll().Where(x => x.Email.Trim() == email.Trim()).ToList().FirstOrDefault();
 
         public IEnumerable<User> GetAll() => _repository.GetAll().ToList();
+
+        public OperationResult Register(UserRegisterModel userModel)
+        {
+            if (string.IsNullOrWhiteSpace(userModel.Email) || !UserValidation.CheckEmail(userModel.Email))
+                return new OperationResult(false, "Email inválido.");
+
+            if (string.IsNullOrWhiteSpace(userModel.Name) || userModel.Name.Length < 2)
+                return new OperationResult(false, "Nome inválido.");
+
+            if (string.IsNullOrWhiteSpace(userModel.Password) || string.IsNullOrWhiteSpace(userModel.PasswordConfirm))
+                return new OperationResult(false, "Confirme a senha para continuar.");
+
+            if (userModel.Password != userModel.PasswordConfirm)
+                return new OperationResult(false, "As senhas informadas não são iguais.");
+
+            if (_repository.GetAll().Where(x => x.Email.Trim() == userModel.Email).ToList().Count > 0)
+                return new OperationResult(false, "Este email já está sendo utilizado por outro usuário.");
+
+            var user = userModel.ToEntity();
+            return Insert(user);
+        }
+
+        public OperationResult Authenticate(UserAuthenticateModel userModel)
+        {
+            var operationResult = new OperationResult()
+            {
+                Success = true,
+                Message = "Usuário autenticado com sucesso."
+            };
+
+            if (string.IsNullOrWhiteSpace(userModel.Email) || !UserValidation.CheckEmail(userModel.Email))
+            {
+                operationResult.Success = false;
+                operationResult.Message = "Email inválido.";
+            }
+
+            if (string.IsNullOrWhiteSpace(userModel.Password))
+            {
+                operationResult.Success = false;
+                operationResult.Message = "Preencha a senha para continuar.";
+            }
+            
+            var user = FindByEmail(userModel.Email);
+
+            if (user == null)
+            {
+                operationResult.Success = false;
+                operationResult.Message = "Usuário e/ou senha inválidos";
+
+                return operationResult;
+            }
+
+            if (!Cryptography.Check(userModel.Password, user.Password))
+            {
+                operationResult.Success = false;
+                operationResult.Message = "Usuário e/ou senha inválidos.";
+            }
+
+            //if (!operationResult.Success)
+            //{
+            //    if (user.Attempts < 5)
+            //        AddAttempts(user);
+            //    else
+            //        BlockUser(user);
+            //}
+            
+            return operationResult;
+        }
+
+        //private void BlockUser(User user)
+        //{
+        //    user.Status = UserStatus.Blocked;
+        //    Update(user);
+        //}
+
+        //private void AddAttempts(User user)
+        //{
+        //    user.Attempts = (short) (user.Attempts + 1);
+        //    Update(user);
+        //}
     }
 }

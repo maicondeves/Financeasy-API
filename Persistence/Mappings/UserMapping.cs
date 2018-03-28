@@ -9,10 +9,11 @@ namespace Financeasy.Api.Persistence.Mappings
         {
             ToTable("User");
             HasKey(u => u.Id);
+            HasIndex(u => u.Email).IsUnique();
 
             Property(c => c.Name).HasColumnName("Name").HasColumnType("varchar").HasMaxLength(30).IsRequired();
             Property(c => c.Email).HasColumnName("Email").HasColumnType("varchar").HasMaxLength(200).IsRequired();
-            Property(c => c.Password).HasColumnName("Password").HasColumnType("varchar").HasMaxLength(20).IsRequired();
+            Property(c => c.Password).HasColumnName("Password").HasColumnType("varchar").IsRequired();
             Property(c => c.Status).HasColumnName("Status").HasColumnType("smallint").IsRequired();
             Property(c => c.Attempts).HasColumnName("Attempts").HasColumnType("smallint").IsRequired();
             Property(c => c.RegisterDate).HasColumnName("RegisterDate").HasColumnType("datetime").IsRequired();
