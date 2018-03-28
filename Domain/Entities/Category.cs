@@ -5,10 +5,11 @@ namespace Financeasy.Api.Domain.Entities
 {
     public class Category
     {
-        public int Id { get; set; }
+        public long Id { get; set; }
         public string Name { get; set; }
         public CategoryType Type { get; set; }
-        public DateTime RegisterDate { get; set; }
+
+        public DateTime? RegisterDate { get; set; }
         public DateTime? UpdateDate { get; set; }
 
         public long UserId { get; set; }

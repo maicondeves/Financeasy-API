@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using Financeasy.Api.Core;
 using Financeasy.Api.Core.DI;
 using Financeasy.Api.Domain.Entities;
 using Financeasy.Api.Domain.Enums;
@@ -14,34 +16,65 @@ namespace Financeasy.Api.Applications
         [Inject]
         private CategoryRepository _repository { get; set; }
 
-        public void Insert(CategoryPostModel categoryModel)
+        public OperationResult Insert(CategoryPostModel categoryModel)
         {
             var category = categoryModel.ToEntity();
-            Insert(category);
+            return Insert(category);
         }
 
-        public void Insert(Category category)
+        public OperationResult Insert(Category category)
         {
-            _repository.Insert(category);
-            _repository.Save();
+            try
+            {
+                category.RegisterDate = DateTime.Now;
+                _repository.Insert(category);
+                _repository.Save();
+                return new OperationResult(true, "Categoria inserida com sucesso.");
+            }
+            catch (Exception e)
+            {
+                return new OperationResult(false, e.Message);
+            }
         }
 
-        public void Update(CategoryPutModel categoryModel)
+        public OperationResult Update(CategoryPutModel categoryModel)
         {
-            var category = categoryModel.ToEntity();
-            Update(category);
+            var currentCategory = FindById(categoryModel.Id);
+
+            if (categoryModel.Name.Length < 2 || categoryModel.Name.Length > 30)
+                return new OperationResult(false, "Nome deve conter no mínimo 2 caracteres e no máximo 30.");
+
+            var category = categoryModel.ToEntity(currentCategory);
+            return Update(category);
         }
 
-        public void Update(Category category)
+        public OperationResult Update(Category category)
         {
-            _repository.Update(category);
-            _repository.Save();
+            try
+            {
+                category.UpdateDate = DateTime.Now;
+                _repository.Update(category);
+                _repository.Save();
+                return new OperationResult(true, "Categoria atualizada com sucesso.");
+            }
+            catch (Exception e)
+            {
+                return new OperationResult(false, e.Message);
+            }
         }
 
-        public void Delete(Category category)
+        public OperationResult Delete(Category category)
         {
-            _repository.Delete(category);
-            _repository.Save();
+            try
+            {
+                _repository.Delete(category);
+                _repository.Save();
+                return new OperationResult(true, "Categoria excluída com sucesso.");
+            }
+            catch (Exception e)
+            {
+                return new OperationResult(false, e.Message);
+            }
         }
 
         public Category FindById(int id) => _repository.FindById(id);

@@ -116,6 +116,7 @@
     <Compile Include="Authentication\Cryptography.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CategoryController.cs" />
+    <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Core\DI\Attributes.cs" />
     <Compile Include="Core\DI\PropertyInject.cs" />
     <Compile Include="Core\IRepository.cs" />

@@ -42,7 +42,7 @@ namespace Financeasy.Api.Controllers
                 return Response(auth.StatusCode, auth.Message);
 
             if (id == 0)
-                return Response(HttpStatusCode.BadRequest, "Id inválido");
+                return Response(HttpStatusCode.BadRequest, "Id inválido.");
 
             var category = _categoryApplication.FindById(id);
             return category == null ? Response(HttpStatusCode.NotFound, "Categoria não encontrada.") : Response(HttpStatusCode.OK, category);

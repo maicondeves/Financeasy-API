@@ -9,6 +9,7 @@ namespace Financeasy.Api.Persistence.Configs
         {
             modelBuilder.Configurations.Add(new CategoryMapping());
             modelBuilder.Configurations.Add(new UserMapping());
+            modelBuilder.Configurations.Add(new CustomerMapping());
             base.OnModelCreating(modelBuilder);
         }
     }

@@ -11,7 +11,8 @@ namespace Financeasy.Api.Domain.Entities
         public string Password { get; set; }
         public UserStatus Status { get; set; }
         public short Attempts { get; set; }
-        public DateTime RegisterDate { get; set; }
+
+        public DateTime? RegisterDate { get; set; }
         public DateTime? UpdateDate { get; set; }
     }
 
