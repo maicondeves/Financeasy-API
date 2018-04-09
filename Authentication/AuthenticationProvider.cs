@@ -48,7 +48,7 @@ namespace Financeasy.Api.Authentication
                     {
                         IsAuthenticated = false,
                         UserId = 0,
-                        StatusCode = HttpStatusCode.NotFound,
+                        StatusCode = HttpStatusCode.Unauthorized,
                         Message = "Usuário e/ou senha inválidos."
                     };
 

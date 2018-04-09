@@ -34,7 +34,7 @@ namespace Financeasy.Api.Controllers
             }
             catch (Exception e)
             {
-                return Response(HttpStatusCode.BadRequest, e.Message);
+                return Response(HttpStatusCode.InternalServerError, e.Message);
             }
         }
 
@@ -52,13 +52,13 @@ namespace Financeasy.Api.Controllers
             }
             catch (Exception e)
             {
-                return Response(HttpStatusCode.BadRequest, e.Message);
+                return Response(HttpStatusCode.InternalServerError, e.Message);
             }
         }
 
         [Route("profile")]
         [HttpGet]
-        public HttpResponseMessage Profile()
+        public HttpResponseMessage ViewProfile()
         {
             var auth = _authProvider.Authenticate(Request);
 
@@ -66,11 +66,39 @@ namespace Financeasy.Api.Controllers
                 return Response(auth.StatusCode, auth.Message);
 
             var user = _userApplication.FindById(auth.UserId);
-            if (user == null)
-                return Response(HttpStatusCode.NotFound, "Usuário não encontrado.");
 
-            UserProfileModel userModel = user.ToModel();
+            UserViewProfileModel userModel = user.ToModel();
             return Response(HttpStatusCode.OK, userModel);
         }
+
+        [Route("profile/{id}")]
+        [HttpPut]
+        public HttpResponseMessage EditProfile([FromBody] UserEditProfileModel userModel, long id = 0)
+        {
+            var auth = _authProvider.Authenticate(Request);
+
+            if (!auth.IsAuthenticated)
+                return Response(auth.StatusCode, auth.Message);
+
+            if (id == 0)
+                return Response(HttpStatusCode.BadRequest, "Id inválido.");
+
+            if (id != userModel.Id)
+                return Response(HttpStatusCode.BadRequest, "Id inválido.");
+
+            try
+            {
+                var operationResult = _userApplication.EditProfile(userModel);
+                if (!operationResult.Success)
+                    return Response(HttpStatusCode.BadRequest, operationResult.Message);
+
+                return Response(HttpStatusCode.OK, operationResult.Message);
+            }
+            catch (Exception e)
+            {
+                return Response(HttpStatusCode.InternalServerError, e.Message);
+            }
+        }
+
     }
 }

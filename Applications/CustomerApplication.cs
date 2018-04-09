@@ -7,6 +7,7 @@ using Financeasy.Api.Domain.Entities;
 using Financeasy.Api.Domain.Models;
 using Financeasy.Api.Persistence.Repositories;
 using Financeasy.Api.Utils.Extensions;
+using Financeasy.Api.Utils.Validations;
 
 namespace Financeasy.Api.Applications
 {
@@ -17,6 +18,16 @@ namespace Financeasy.Api.Applications
 
         public OperationResult Insert(CustomerPostModel customerModel)
         {
+            //Fazer as validações aqui.
+            if (string.IsNullOrWhiteSpace(customerModel.Name))
+                return new OperationResult(false, "Nome inválido.");
+
+            if (customerModel.Name.Length < 2 || customerModel.Name.Length > 30)
+                return new OperationResult(false, "Nome deve conter no mínimo 2 caracteres e no máximo 30.");
+            
+            if (!string.IsNullOrWhiteSpace(customerModel.Email) && !Validation.CheckEmail(customerModel.Email))
+                return new OperationResult(false, "Email inválido.");
+            
             var customer = customerModel.ToEntity();
             return Insert(customer);
         }
@@ -39,11 +50,19 @@ namespace Financeasy.Api.Applications
         public OperationResult Update(CustomerPutModel customerModel)
         {
             var currentCustomer = FindById(customerModel.Id);
-
-            //Validações
             if (currentCustomer == null)
                 return new OperationResult(false, "Cliente não encontrado.");
 
+            //Fazer as validações aqui.
+            if (string.IsNullOrWhiteSpace(customerModel.Name))
+                return new OperationResult(false, "Nome inválido.");
+
+            if (customerModel.Name.Length < 2 || customerModel.Name.Length > 30)
+                return new OperationResult(false, "Nome deve conter no mínimo 2 caracteres e no máximo 30.");
+
+            if (!string.IsNullOrWhiteSpace(customerModel.Email) && !Validation.CheckEmail(customerModel.Email))
+                return new OperationResult(false, "Email inválido.");
+            
             var customer = customerModel.ToEntity(currentCustomer);
             return Update(customer);
         }

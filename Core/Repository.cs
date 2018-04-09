@@ -5,7 +5,7 @@ using Financeasy.Api.Persistence.Configs;
 
 namespace Financeasy.Api.Core
 {
-    public abstract class Repository<TEntity> : IRepository<TEntity>
+    public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {
         [Inject]
         public FinanceasyContext Context { get; set; }

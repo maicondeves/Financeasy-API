@@ -1,5 +1,4 @@
-﻿using System;
-using Financeasy.Api.Authentication;
+﻿using Financeasy.Api.Authentication;
 using Financeasy.Api.Domain.Entities;
 using Financeasy.Api.Domain.Enums;
 using Financeasy.Api.Domain.Models;
@@ -27,16 +26,16 @@ namespace Financeasy.Api.Utils.Extensions
         }
 
         /// <summary>
-        /// UserPutModel to User
+        /// User to UserEditProfileModel
         /// </summary>
-        public static User ToEntity(this UserPutModel model, User currentUser)
+        public static User ToEntity(this UserEditProfileModel model, User currentUser)
         {
             return new User()
             {
                 Id = currentUser.Id,
-                Name = model.Name ?? currentUser.Name,
-                Email = model.Email ?? currentUser.Email,
-                Password = Cryptography.BlowfishHash(model.Password) ?? currentUser.Password,
+                Name = model.Name.Trim(),
+                Email = model.Email.Trim(),
+                Password = string.IsNullOrWhiteSpace(model.Password) ? currentUser.Password : Cryptography.BlowfishHash(model.Password.Trim()),
                 Attempts = 0,
                 Status = UserStatus.Active,
                 RegisterDate = currentUser.RegisterDate,
@@ -45,16 +44,16 @@ namespace Financeasy.Api.Utils.Extensions
         }
 
         /// <summary>
-        /// User to UserProfileModel
+        /// User to UserViewProfileModel
         /// </summary>
-        public static UserProfileModel ToModel(this User user)
+        public static UserViewProfileModel ToModel(this User user)
         {
-            return new UserProfileModel()
+            return new UserViewProfileModel()
             {
                 Email = user.Email,
                 Name = user.Name,
                 RegisterDate = user.RegisterDate,
-                UpdateDate = user.UpdateDate
+                UpdateDate = user.UpdateDate.GetValueOrDefault()
             };
         }
 
@@ -145,6 +144,4 @@ namespace Financeasy.Api.Utils.Extensions
             };
         }
     }
-}
-
 }

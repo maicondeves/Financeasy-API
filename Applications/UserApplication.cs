@@ -31,36 +31,7 @@ namespace Financeasy.Api.Applications
                 return new OperationResult(false, e.Message);
             }
         }
-
-        public OperationResult Update(UserPutModel userModel)
-        {
-            var currentUser = FindById(userModel.Id);
-
-            if (currentUser == null)
-                return new OperationResult(false, "Usuário não encontrado.");
-
-            if (string.IsNullOrWhiteSpace(userModel.Email) || !UserValidation.CheckEmail(userModel.Email))
-                return new OperationResult(false, "Email inválido.");
-
-            if (string.IsNullOrWhiteSpace(userModel.Name))
-                return new OperationResult(false, "Nome inválido.");
-
-            if (userModel.Name.Length < 2 || userModel.Name.Length > 30)
-                return new OperationResult(false, "Nome deve conter no mínimo 2 caracteres e no máximo 30.");
-
-            if (string.IsNullOrWhiteSpace(userModel.Password) || string.IsNullOrWhiteSpace(userModel.PasswordConfirm))
-                return new OperationResult(false, "Confirme a senha para continuar.");
-
-            if (userModel.Password != userModel.PasswordConfirm)
-                return new OperationResult(false, "As senhas informadas não são iguais.");
-
-            if (_repository.GetAll().Where(x => x.Email.Trim() == userModel.Email).ToList().Count > 0)
-                return new OperationResult(false, "Este email já está sendo utilizado por outro usuário.");
-
-            var user = userModel.ToEntity(currentUser);
-            return Update(user);
-        }
-
+        
         public OperationResult Update(User user)
         {
             try
@@ -96,9 +67,39 @@ namespace Financeasy.Api.Applications
 
         public IEnumerable<User> GetAll() => _repository.GetAll().ToList();
 
+        public OperationResult EditProfile(UserEditProfileModel userModel)
+        {
+            var currentUser = FindById(userModel.Id);
+
+            if (currentUser == null)
+                return new OperationResult(false, "Usuário não encontrado.");
+
+            if (string.IsNullOrWhiteSpace(userModel.Email) || !Validation.CheckEmail(userModel.Email))
+                return new OperationResult(false, "Email inválido.");
+
+            if (string.IsNullOrWhiteSpace(userModel.Name))
+                return new OperationResult(false, "Nome inválido.");
+
+            if (userModel.Name.Length < 2 || userModel.Name.Length > 30)
+                return new OperationResult(false, "Nome deve conter no mínimo 2 caracteres e no máximo 30.");
+
+            if (string.IsNullOrWhiteSpace(userModel.Password) || string.IsNullOrWhiteSpace(userModel.PasswordConfirm))
+                return new OperationResult(false, "Confirme a senha para continuar.");
+
+            if (!string.IsNullOrWhiteSpace(userModel.Password) && !string.IsNullOrWhiteSpace(userModel.PasswordConfirm))
+                if (userModel.Password != userModel.PasswordConfirm)
+                    return new OperationResult(false, "As senhas informadas não são iguais.");
+
+            if (_repository.GetAll().Where(x => x.Email.Trim() == userModel.Email).ToList().Count > 0)
+                return new OperationResult(false, "Este email já está sendo utilizado por outro usuário.");
+
+            var user = userModel.ToEntity(currentUser);
+            return Update(user);
+        }
+
         public OperationResult Register(UserRegisterModel userModel)
         {
-            if (string.IsNullOrWhiteSpace(userModel.Email) || !UserValidation.CheckEmail(userModel.Email))
+            if (string.IsNullOrWhiteSpace(userModel.Email) || !Validation.CheckEmail(userModel.Email))
                 return new OperationResult(false, "Email inválido.");
 
             if (string.IsNullOrWhiteSpace(userModel.Name))
@@ -116,6 +117,8 @@ namespace Financeasy.Api.Applications
             if (_repository.GetAll().Where(x => x.Email.Trim() == userModel.Email).ToList().Count > 0)
                 return new OperationResult(false, "Este email já está sendo utilizado por outro usuário.");
 
+
+
             var user = userModel.ToEntity();
             return Insert(user);
         }
@@ -128,7 +131,7 @@ namespace Financeasy.Api.Applications
                 Message = "Usuário autenticado com sucesso."
             };
 
-            if (string.IsNullOrWhiteSpace(userModel.Email) || !UserValidation.CheckEmail(userModel.Email))
+            if (string.IsNullOrWhiteSpace(userModel.Email) || !Validation.CheckEmail(userModel.Email))
             {
                 operationResult.Success = false;
                 operationResult.Message = "Email inválido.";
@@ -166,6 +169,7 @@ namespace Financeasy.Api.Applications
             
             return operationResult;
         }
+        
 
         //private void BlockUser(User user)
         //{

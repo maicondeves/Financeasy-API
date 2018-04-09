@@ -33,7 +33,7 @@ namespace Financeasy.Api.Controllers
 
         [Route("{id}")]
         [HttpGet]
-        public HttpResponseMessage GetById(int id = 0)
+        public HttpResponseMessage GetById(long id = 0)
         {
             var auth = _authProvider.Authenticate(Request);
 
@@ -55,22 +55,79 @@ namespace Financeasy.Api.Controllers
 
             if (!auth.IsAuthenticated)
                 return Response(auth.StatusCode, auth.Message);
-
-            //Validação dos campos preenchidos
-            if (!ModelState.IsValid)
-                return Response(HttpStatusCode.BadRequest, ModelState);
-
+            
             try
             {
                 customerModel.UserId = auth.UserId;
-                _customerApplication.Insert(customerModel);
-                return Response(HttpStatusCode.OK, "Registro inserido com sucesso.");
+                var operationResult = _customerApplication.Insert(customerModel);
+                if (!operationResult.Success)
+                    return Response(HttpStatusCode.BadRequest, operationResult.Message);
+
+                return Response(HttpStatusCode.OK, operationResult.Message);
             }
             catch (Exception e)
             {
-                return Response(HttpStatusCode.BadRequest, e.Message);
+                return Response(HttpStatusCode.InternalServerError, e.Message);
             }
+        }
 
+        [Route("")]
+        [HttpPut]
+        public HttpResponseMessage Put([FromBody] CustomerPutModel customerModel, long id = 0)
+        {
+            var auth = _authProvider.Authenticate(Request);
+
+            if (!auth.IsAuthenticated)
+                return Response(auth.StatusCode, auth.Message);
+
+            if (id == 0)
+                return Response(HttpStatusCode.BadRequest, "Id inválido.");
+
+            if (id != customerModel.Id)
+                return Response(HttpStatusCode.BadRequest, "Id inválido.");
+
+            try
+            {
+                var operationResult = _customerApplication.Update(customerModel);
+                if (!operationResult.Success)
+                    return Response(HttpStatusCode.BadRequest, operationResult.Message);
+
+                return Response(HttpStatusCode.OK, operationResult.Message);
+            }
+            catch (Exception e)
+            {
+                return Response(HttpStatusCode.InternalServerError, e.Message);
+            }
+        }
+
+        [Route("")]
+        [HttpDelete]
+        public HttpResponseMessage Delete(long id = 0)
+        {
+            var auth = _authProvider.Authenticate(Request);
+
+            if (!auth.IsAuthenticated)
+                return Response(auth.StatusCode, auth.Message);
+
+            if (id == 0)
+                return Response(HttpStatusCode.BadRequest, "Id inválido.");
+
+            try
+            {
+                var customer = _customerApplication.FindById(id);
+                if (customer == null)
+                    return Response(HttpStatusCode.NotFound, "Cliente não encontrado.");
+
+                var operationResult = _customerApplication.Delete(customer);
+                if (!operationResult.Success)
+                    return Response(HttpStatusCode.BadRequest, operationResult.Message);
+
+                return Response(HttpStatusCode.OK, operationResult.Message);
+            }
+            catch (Exception e)
+            {
+                return Response(HttpStatusCode.InternalServerError, e.Message);
+            }
         }
     }
 }

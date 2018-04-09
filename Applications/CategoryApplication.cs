@@ -77,7 +77,7 @@ namespace Financeasy.Api.Applications
             }
         }
 
-        public Category FindById(int id) => _repository.FindById(id);
+        public Category FindById(long id) => _repository.FindById(id);
 
         public IEnumerable<Category> FindByType(CategoryType type) => _repository.GetAll().Where(x => x.Type == type).ToList();
 

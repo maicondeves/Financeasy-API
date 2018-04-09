@@ -34,7 +34,7 @@ namespace Financeasy.Api.Controllers
 
         [Route("{id}")]
         [HttpGet]
-        public HttpResponseMessage GetById(int id = 0)
+        public HttpResponseMessage GetById(long id = 0)
         {
             var auth = _authProvider.Authenticate(Request);
 
@@ -73,26 +73,25 @@ namespace Financeasy.Api.Controllers
             if (!auth.IsAuthenticated)
                 return Response(auth.StatusCode, auth.Message);
 
-            //Validação dos campos preenchidos
-            if (!ModelState.IsValid)
-                return Response(HttpStatusCode.BadRequest, ModelState);
-
             try
             {
                 categoryModel.UserId = auth.UserId;
-                _categoryApplication.Insert(categoryModel);
-                return Response(HttpStatusCode.OK, "Registro inserido com sucesso.");
+                var operationResult = _categoryApplication.Insert(categoryModel);
+                if (!operationResult.Success)
+                    return Response(HttpStatusCode.BadRequest, operationResult.Message);
+
+                return Response(HttpStatusCode.OK, operationResult.Message);
             }
             catch (Exception e)
             {
-                return Response(HttpStatusCode.BadRequest, e.Message);
+                return Response(HttpStatusCode.InternalServerError, e.Message);
             }
 
         }
 
         [Route("{id}")]
         [HttpPut]
-        public HttpResponseMessage Put([FromBody] CategoryPutModel categoryModel, int id = 0)
+        public HttpResponseMessage Put([FromBody] CategoryPutModel categoryModel, long id = 0)
         {
             var auth = _authProvider.Authenticate(Request);
 
@@ -101,29 +100,28 @@ namespace Financeasy.Api.Controllers
 
             if (id == 0)
                 return Response(HttpStatusCode.BadRequest, "Id inválido.");
-
-            //Validação dos campos preenchidos
-            if (!ModelState.IsValid)
-                return Response(HttpStatusCode.BadRequest, ModelState);
 
             if (id != categoryModel.Id)
                 return Response(HttpStatusCode.BadRequest, "Id inválido.");
 
             try
             {
-                _categoryApplication.Update(categoryModel);
-                return Response(HttpStatusCode.OK, "Registro atualizado com sucesso.");
+                var operationResult = _categoryApplication.Update(categoryModel);
+                if (!operationResult.Success)
+                    return Response(HttpStatusCode.BadRequest, operationResult.Message);
+
+                return Response(HttpStatusCode.OK, operationResult.Message);
             }
             catch (Exception e)
             {
-                return Response(HttpStatusCode.BadRequest, e.Message);
+                return Response(HttpStatusCode.InternalServerError, e.Message);
             }
 
         }
 
         [Route("{id}")]
         [HttpDelete]
-        public HttpResponseMessage Delete(int id = 0)
+        public HttpResponseMessage Delete(long id = 0)
         {
             var auth = _authProvider.Authenticate(Request);
 
@@ -133,18 +131,21 @@ namespace Financeasy.Api.Controllers
             if (id == 0)
                 return Response(HttpStatusCode.BadRequest, "Id inválido.");
 
-            var category = _categoryApplication.FindById(id);
-            if (category == null)
-                return Response(HttpStatusCode.NotFound, "Categoria não encontrada.");
-
             try
             {
-                _categoryApplication.Delete(category);
-                return Response(HttpStatusCode.OK, "Registro excluído com sucesso.");
+                var category = _categoryApplication.FindById(id);
+                if (category == null)
+                    return Response(HttpStatusCode.NotFound, "Categoria não encontrada.");
+
+                var operationResult = _categoryApplication.Delete(category);
+                if (!operationResult.Success)
+                    return Response(HttpStatusCode.BadRequest, operationResult.Message);
+
+                return Response(HttpStatusCode.OK, operationResult.Message);
             }
             catch (Exception e)
             {
-                return Response(HttpStatusCode.BadRequest, e.Message);
+                return Response(HttpStatusCode.InternalServerError, e.Message);
             }
         }
     }
