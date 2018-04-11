@@ -137,7 +137,7 @@ namespace Financeasy.Api.Controllers
                 if (category == null)
                     return Response(HttpStatusCode.NotFound, "Categoria não encontrada.");
 
-                var operationResult = _categoryApplication.Delete(category);
+                var operationResult = _categoryApplication.DeleteAndSave(category);
                 if (!operationResult.Success)
                     return Response(HttpStatusCode.BadRequest, operationResult.Message);
 

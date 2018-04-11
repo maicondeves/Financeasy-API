@@ -1,4 +1,6 @@
-﻿using Financeasy.Api.Authentication;
+﻿using System;
+using System.Collections.Generic;
+using Financeasy.Api.Authentication;
 using Financeasy.Api.Domain.Entities;
 using Financeasy.Api.Domain.Enums;
 using Financeasy.Api.Domain.Models;
@@ -26,21 +28,16 @@ namespace Financeasy.Api.Utils.Extensions
         }
 
         /// <summary>
-        /// User to UserEditProfileModel
+        /// UserEditProfileModel to User 
         /// </summary>
         public static User ToEntity(this UserEditProfileModel model, User currentUser)
         {
-            return new User()
-            {
-                Id = currentUser.Id,
-                Name = model.Name.Trim(),
-                Email = model.Email.Trim(),
-                Password = string.IsNullOrWhiteSpace(model.Password) ? currentUser.Password : Cryptography.BlowfishHash(model.Password.Trim()),
-                Attempts = 0,
-                Status = UserStatus.Active,
-                RegisterDate = currentUser.RegisterDate,
-                UpdateDate = null
-            };
+            currentUser.Name = model.Name.Trim();
+            currentUser.Email = model.Email.Trim();
+            currentUser.Password = string.IsNullOrWhiteSpace(model.Password) ? currentUser.Password : Cryptography.BlowfishHash(model.Password.Trim());
+            currentUser.Attempts = 0;
+            currentUser.Status = UserStatus.Active;
+            return currentUser;
         }
 
         /// <summary>
@@ -74,19 +71,13 @@ namespace Financeasy.Api.Utils.Extensions
         }
 
         /// <summary>
-        /// CategoryPostModel to Category
+        /// CategoryPutModel to Category
         /// </summary>
         public static Category ToEntity(this CategoryPutModel model, Category currentCategory)
         {
-            return new Category()
-            {
-                Id = model.Id,
-                Name = model.Name,
-                Type = model.Type,
-                UserId = currentCategory.UserId,
-                RegisterDate = currentCategory.RegisterDate,
-                UpdateDate = null
-            };
+            currentCategory.Name = model.Name;
+            currentCategory.Type = model.Type;
+            return currentCategory;
         }
 
         /// <summary>
@@ -122,26 +113,110 @@ namespace Financeasy.Api.Utils.Extensions
         /// </summary>
         public static Customer ToEntity(this CustomerPutModel model, Customer currentCustomer)
         {
-            return new Customer()
+            currentCustomer.Name = model.Name;
+            currentCustomer.RG = model.RG;
+            currentCustomer.CPF = model.CPF;
+            currentCustomer.CNPJ = model.CNPJ;
+            currentCustomer.Email = model.Email;
+            currentCustomer.HomePhone = model.HomePhone;
+            currentCustomer.CommercialPhone = model.CommercialPhone;
+            currentCustomer.CellPhone = model.CellPhone;
+            currentCustomer.CEP = model.CEP;
+            currentCustomer.StreetAddress = model.StreetAddress;
+            currentCustomer.Complement = model.Complement;
+            currentCustomer.District = model.District;
+            currentCustomer.City = model.City;
+            currentCustomer.State = model.State;
+            return currentCustomer;
+        }
+
+        /// <summary>
+        /// ProjectPostModel to Project
+        /// </summary>
+        public static Project ToEntity(this ProjectPostModel model)
+        {
+            return new Project()
             {
                 Id = 0,
                 Name = model.Name,
-                RG = model.RG,
-                CPF = model.CPF,
-                CNPJ = model.CNPJ,
-                Email = model.Email,
-                HomePhone = model.HomePhone,
-                CommercialPhone = model.CommercialPhone,
-                CellPhone = model.CellPhone,
+                Description = model.Description,
+                Status = model.Status,
+                StartDate = model.StartDate,
+                ConclusionDate = model.ConclusionDate,
                 CEP = model.CEP,
                 StreetAddress = model.StreetAddress,
                 Complement = model.Complement,
                 District = model.District,
                 City = model.City,
                 State = model.State,
-                RegisterDate = currentCustomer.RegisterDate,
+                CategoryId = model.CategoryId,
+                CustomerId = model.CustomerId,
+                Expenses = new List<Expense>(),
+                Revenues = new List<Revenue>(),
+                RegisterDate = DateTime.Now,
                 UpdateDate = null,
+                UserId = model.UserId
             };
+        }
+
+        /// <summary>
+        /// ProjectPutModel to Project
+        /// </summary>
+        public static Project ToEntity(this ProjectPutModel model, Project currentProject)
+        {
+            currentProject.Name = model.Name;
+            currentProject.Description = model.Description;
+            currentProject.Status = model.Status;
+            currentProject.StartDate = model.StartDate;
+            currentProject.ConclusionDate = model.ConclusionDate;
+            currentProject.CEP = model.CEP;
+            currentProject.StreetAddress = model.StreetAddress;
+            currentProject.Complement = model.Complement;
+            currentProject.District = model.District;
+            currentProject.City = model.City;
+            currentProject.State = model.State;
+            currentProject.CategoryId = model.CategoryId;
+            currentProject.CustomerId = model.CustomerId;
+            return currentProject;
+        }
+
+        /// <summary>
+        /// RevenuePostModel to Revenue
+        /// </summary>
+        public static Revenue ToEntity(this RevenuePostModel model)
+        {
+            return new Revenue()
+            {
+                Id = 0,
+                Description = model.Description,
+                Status = model.Status,
+                ReceivableAmount = model.ReceivableAmount,
+                ReceivedAmount = model.ReceivedAmount,
+                ReceivedDate = model.ReceivedDate,
+                MonthPeriod = model.MonthPeriod,
+                YearPeriod = model.YearPeriod,
+                CategoryId = model.CategoryId,
+                ProjectId = model.ProjectId,
+                RegisterDate = DateTime.Now,
+                UpdateDate = null,
+                UserId = model.UserId
+            };
+        }
+
+        /// <summary>
+        /// RevenuePutModel to Revenue
+        /// </summary>
+        public static Revenue ToEntity(this RevenuePutModel model, Revenue currentRevenue)
+        {
+            currentRevenue.Description = model.Description;
+            currentRevenue.Status = model.Status;
+            currentRevenue.ReceivableAmount = model.ReceivableAmount;
+            currentRevenue.ReceivedAmount = model.ReceivedAmount;
+            currentRevenue.ReceivedDate = model.ReceivedDate;
+            currentRevenue.MonthPeriod = model.MonthPeriod;
+            currentRevenue.YearPeriod = model.YearPeriod;
+            currentRevenue.CategoryId = model.CategoryId;
+            return currentRevenue;
         }
     }
 }

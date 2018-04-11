@@ -11,13 +11,13 @@ namespace Financeasy.Api.Persistence.Mappings
             HasKey(u => u.Id);
             HasIndex(u => u.Email).IsUnique();
 
-            Property(c => c.Name).HasColumnName("Name").HasColumnType("varchar").HasMaxLength(30).IsRequired();
-            Property(c => c.Email).HasColumnName("Email").HasColumnType("varchar").HasMaxLength(200).IsRequired();
-            Property(c => c.Password).HasColumnName("Password").HasColumnType("varchar").IsRequired();
-            Property(c => c.Status).HasColumnName("Status").HasColumnType("smallint").IsRequired();
-            Property(c => c.Attempts).HasColumnName("Attempts").HasColumnType("smallint").IsRequired();
-            Property(c => c.RegisterDate).HasColumnName("RegisterDate").HasColumnType("datetime").IsRequired();
-            Property(c => c.UpdateDate).HasColumnName("UpdateDate").HasColumnType("datetime");
+            Property(x => x.Name).HasColumnName("Name").HasColumnType("varchar").HasMaxLength(30).IsRequired();
+            Property(x => x.Email).HasColumnName("Email").HasColumnType("varchar").HasMaxLength(200).IsRequired();
+            Property(x => x.Password).HasColumnName("Password").HasColumnType("varchar").IsRequired();
+            Property(x => x.Status).HasColumnName("Status").HasColumnType("smallint").IsRequired();
+            Property(x => x.Attempts).HasColumnName("Attempts").HasColumnType("smallint").IsRequired();
+            Property(x => x.RegisterDate).HasColumnName("RegisterDate").HasColumnType("datetime").IsRequired();
+            Property(x => x.UpdateDate).HasColumnName("UpdateDate").HasColumnType("datetime");
         }
     }
 }

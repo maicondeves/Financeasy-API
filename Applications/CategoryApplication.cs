@@ -18,11 +18,17 @@ namespace Financeasy.Api.Applications
 
         public OperationResult Insert(CategoryPostModel categoryModel)
         {
+            if (string.IsNullOrWhiteSpace(categoryModel.Name))
+                return new OperationResult(false, "Descrição inválida.");
+
+            if (categoryModel.Name.Length < 2 || categoryModel.Name.Length > 30)
+                return new OperationResult(false, "Descrição deve conter no mínimo 2 caracteres e no máximo 30.");
+
             var category = categoryModel.ToEntity();
-            return Insert(category);
+            return InsertAndSave(category);
         }
 
-        public OperationResult Insert(Category category)
+        public OperationResult InsertAndSave(Category category)
         {
             try
             {
@@ -41,14 +47,17 @@ namespace Financeasy.Api.Applications
         {
             var currentCategory = FindById(categoryModel.Id);
 
+            if (string.IsNullOrWhiteSpace(categoryModel.Name))
+                return new OperationResult(false, "Descrição inválida.");
+
             if (categoryModel.Name.Length < 2 || categoryModel.Name.Length > 30)
-                return new OperationResult(false, "Nome deve conter no mínimo 2 caracteres e no máximo 30.");
+                return new OperationResult(false, "Descrição deve conter no mínimo 2 caracteres e no máximo 30.");
 
             var category = categoryModel.ToEntity(currentCategory);
-            return Update(category);
+            return UpdateAndSave(category);
         }
 
-        public OperationResult Update(Category category)
+        public OperationResult UpdateAndSave(Category category)
         {
             try
             {
@@ -63,7 +72,7 @@ namespace Financeasy.Api.Applications
             }
         }
 
-        public OperationResult Delete(Category category)
+        public OperationResult DeleteAndSave(Category category)
         {
             try
             {

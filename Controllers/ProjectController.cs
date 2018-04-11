@@ -10,11 +10,11 @@ using Financeasy.Api.Domain.Models;
 
 namespace Financeasy.Api.Controllers
 {
-    [RoutePrefix("customers")]
-    public class CustomerController : WebApiController
+    [RoutePrefix("projects")]
+    public class ProjectController : WebApiController
     {
         [Inject]
-        private CustomerApplication _customerApplication { get; set; }
+        private ProjectApplication _projectApplication { get; set; }
 
         [Inject]
         private AuthenticationProvider _authProvider { get; set; }
@@ -28,7 +28,7 @@ namespace Financeasy.Api.Controllers
             if (!auth.IsAuthenticated)
                 return Response(auth.StatusCode, auth.Message);
 
-            return Response(HttpStatusCode.OK, _customerApplication.GetAll());
+            return Response(HttpStatusCode.OK, _projectApplication.GetAll());
         }
 
         [Route("{id}")]
@@ -43,23 +43,23 @@ namespace Financeasy.Api.Controllers
             if (id == 0)
                 return Response(HttpStatusCode.BadRequest, "Id inválido.");
 
-            var customer = _customerApplication.FindById(id);
-            return customer == null ? Response(HttpStatusCode.NotFound, "Cliente não encontrado.") : Response(HttpStatusCode.OK, customer);
+            var project = _projectApplication.FindById(id);
+            return project == null ? Response(HttpStatusCode.NotFound, "Categoria não encontrada.") : Response(HttpStatusCode.OK, project);
         }
-
+        
         [Route("")]
         [HttpPost]
-        public HttpResponseMessage Post([FromBody] CustomerPostModel customerModel)
+        public HttpResponseMessage Post([FromBody] ProjectPostModel projectModel)
         {
             var auth = _authProvider.Authenticate(Request);
 
             if (!auth.IsAuthenticated)
                 return Response(auth.StatusCode, auth.Message);
-            
+
             try
             {
-                customerModel.UserId = auth.UserId;
-                var operationResult = _customerApplication.Insert(customerModel);
+                projectModel.UserId = auth.UserId;
+                var operationResult = _projectApplication.Insert(projectModel);
                 if (!operationResult.Success)
                     return Response(HttpStatusCode.BadRequest, operationResult.Message);
 
@@ -69,11 +69,12 @@ namespace Financeasy.Api.Controllers
             {
                 return Response(HttpStatusCode.InternalServerError, e.Message);
             }
+
         }
 
         [Route("{id}")]
         [HttpPut]
-        public HttpResponseMessage Put([FromBody] CustomerPutModel customerModel, long id = 0)
+        public HttpResponseMessage Put([FromBody] ProjectPutModel projectModel, long id = 0)
         {
             var auth = _authProvider.Authenticate(Request);
 
@@ -83,12 +84,12 @@ namespace Financeasy.Api.Controllers
             if (id == 0)
                 return Response(HttpStatusCode.BadRequest, "Id inválido.");
 
-            if (id != customerModel.Id)
+            if (id != projectModel.Id)
                 return Response(HttpStatusCode.BadRequest, "Id inválido.");
 
             try
             {
-                var operationResult = _customerApplication.Update(customerModel);
+                var operationResult = _projectApplication.Update(projectModel);
                 if (!operationResult.Success)
                     return Response(HttpStatusCode.BadRequest, operationResult.Message);
 
@@ -98,9 +99,10 @@ namespace Financeasy.Api.Controllers
             {
                 return Response(HttpStatusCode.InternalServerError, e.Message);
             }
+
         }
 
-        [Route("")]
+        [Route("{id}")]
         [HttpDelete]
         public HttpResponseMessage Delete(long id = 0)
         {
@@ -114,11 +116,11 @@ namespace Financeasy.Api.Controllers
 
             try
             {
-                var customer = _customerApplication.FindById(id);
-                if (customer == null)
-                    return Response(HttpStatusCode.NotFound, "Cliente não encontrado.");
+                var project = _projectApplication.FindById(id);
+                if (project == null)
+                    return Response(HttpStatusCode.NotFound, "Categoria não encontrada.");
 
-                var operationResult = _customerApplication.DeleteAndSave(customer);
+                var operationResult = _projectApplication.DeleteAndSave(project);
                 if (!operationResult.Success)
                     return Response(HttpStatusCode.BadRequest, operationResult.Message);
 

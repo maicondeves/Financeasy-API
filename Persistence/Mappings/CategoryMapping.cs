@@ -8,16 +8,16 @@ namespace Financeasy.Api.Persistence.Mappings
         public CategoryMapping()
         {
             ToTable("Category");
-            HasKey(c => c.Id);
+            HasKey(x => x.Id);
 
-            Property(c => c.Name).HasColumnName("Name").HasColumnType("varchar").HasMaxLength(30).IsRequired();
-            Property(c => c.Type).HasColumnName("Type").HasColumnType("smallint").IsRequired();
+            Property(x => x.Name).HasColumnName("Name").HasColumnType("varchar").HasMaxLength(30).IsRequired();
+            Property(x => x.Type).HasColumnName("Type").HasColumnType("smallint").IsRequired();
 
-            Property(c => c.RegisterDate).HasColumnName("RegisterDate").HasColumnType("datetime").IsRequired();
-            Property(c => c.UpdateDate).HasColumnName("UpdateDate").HasColumnType("datetime");
+            Property(x => x.RegisterDate).HasColumnName("RegisterDate").HasColumnType("datetime").IsRequired();
+            Property(x => x.UpdateDate).HasColumnName("UpdateDate").HasColumnType("datetime");
 
-            Property(c => c.UserId).HasColumnName("UserId").HasColumnType("bigint").IsRequired();
-            HasRequired(c => c.User).WithMany().HasForeignKey(c => c.UserId);
+            Property(x => x.UserId).HasColumnName("UserId").HasColumnType("bigint").IsRequired();
+            HasRequired(x => x.User).WithMany().HasForeignKey(x => x.UserId);
         }
     }
 }

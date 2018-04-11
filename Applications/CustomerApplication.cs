@@ -29,10 +29,10 @@ namespace Financeasy.Api.Applications
                 return new OperationResult(false, "Email inválido.");
             
             var customer = customerModel.ToEntity();
-            return Insert(customer);
+            return InsertAndSave(customer);
         }
 
-        public OperationResult Insert(Customer customer)
+        public OperationResult InsertAndSave(Customer customer)
         {
             try
             {
@@ -64,10 +64,10 @@ namespace Financeasy.Api.Applications
                 return new OperationResult(false, "Email inválido.");
             
             var customer = customerModel.ToEntity(currentCustomer);
-            return Update(customer);
+            return UpdateAndSave(customer);
         }
 
-        public OperationResult Update(Customer customer)
+        public OperationResult UpdateAndSave(Customer customer)
         {
             try
             {
@@ -82,7 +82,7 @@ namespace Financeasy.Api.Applications
             }
         }
 
-        public OperationResult Delete(Customer customer)
+        public OperationResult DeleteAndSave(Customer customer)
         {
             try
             {
