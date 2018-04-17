@@ -90,8 +90,9 @@ namespace Financeasy.Api.Applications
                 if (userModel.Password != userModel.PasswordConfirm)
                     return new OperationResult(false, "As senhas informadas não são iguais.");
 
-            if (_repository.GetAll().Where(x => x.Email.Trim() == userModel.Email).ToList().Count > 0)
-                return new OperationResult(false, "Este email já está sendo utilizado por outro usuário.");
+            if (userModel.Email != currentUser.Email)
+                if (_repository.GetAll().Where(x => x.Email.Trim() == userModel.Email).ToList().Count > 0)
+                    return new OperationResult(false, "Este email já está sendo utilizado por outro usuário.");
 
             var user = userModel.ToEntity(currentUser);
             return Update(user);

@@ -32,8 +32,8 @@ namespace Financeasy.Api.Utils.Extensions
         /// </summary>
         public static User ToEntity(this UserEditProfileModel model, User currentUser)
         {
-            currentUser.Name = model.Name.Trim();
-            currentUser.Email = model.Email.Trim();
+            currentUser.Name = model.Name == currentUser.Name ? currentUser.Name : model.Name.Trim();
+            currentUser.Email = model.Email == currentUser.Email ? currentUser.Email : model.Email.Trim();
             currentUser.Password = string.IsNullOrWhiteSpace(model.Password) ? currentUser.Password : Cryptography.BlowfishHash(model.Password.Trim());
             currentUser.Attempts = 0;
             currentUser.Status = UserStatus.Active;
@@ -213,6 +213,47 @@ namespace Financeasy.Api.Utils.Extensions
             currentRevenue.ReceivableAmount = model.ReceivableAmount;
             currentRevenue.ReceivedAmount = model.ReceivedAmount;
             currentRevenue.ReceivedDate = model.ReceivedDate;
+            currentRevenue.MonthPeriod = model.MonthPeriod;
+            currentRevenue.YearPeriod = model.YearPeriod;
+            currentRevenue.CategoryId = model.CategoryId;
+            return currentRevenue;
+        }
+
+        /// <summary>
+        /// ExpensePostModel to Expense
+        /// </summary>
+        public static Expense ToEntity(this ExpensePostModel model)
+        {
+            return new Expense()
+            {
+                Id = 0,
+                Description = model.Description,
+                Status = model.Status,
+                Amount = model.Amount,
+                ExpirationDate = model.ExpirationDate,
+                PaymentAmount = model.PaymentAmount,
+                PaymentDate = model.PaymentDate,
+                MonthPeriod = model.MonthPeriod,
+                YearPeriod = model.YearPeriod,
+                CategoryId = model.CategoryId,
+                ProjectId = model.ProjectId,
+                RegisterDate = DateTime.Now,
+                UpdateDate = null,
+                UserId = model.UserId
+            };
+        }
+
+        /// <summary>
+        /// ExpensePutModel to Expense
+        /// </summary>
+        public static Expense ToEntity(this ExpensePutModel model, Expense currentRevenue)
+        {
+            currentRevenue.Description = model.Description;
+            currentRevenue.Status = model.Status;
+            currentRevenue.Amount = model.Amount;
+            currentRevenue.ExpirationDate = model.ExpirationDate;
+            currentRevenue.PaymentAmount = model.PaymentAmount;
+            currentRevenue.PaymentDate = model.PaymentDate;
             currentRevenue.MonthPeriod = model.MonthPeriod;
             currentRevenue.YearPeriod = model.YearPeriod;
             currentRevenue.CategoryId = model.CategoryId;

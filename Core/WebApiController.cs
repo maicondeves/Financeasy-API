@@ -14,7 +14,7 @@ namespace Financeasy.Api.Core
 
             if (status == HttpStatusCode.Unauthorized)
             {
-                response.StatusCode = HttpStatusCode.Unauthorized;
+                //response.StatusCode = HttpStatusCode.Unauthorized;
                 response.Headers.Add("WWW-Authenticate", "Basic realm=\"Financeasy\"");
             }
             

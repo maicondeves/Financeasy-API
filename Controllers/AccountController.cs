@@ -46,7 +46,7 @@ namespace Financeasy.Api.Controllers
             {
                 var operationResult = _userApplication.Authenticate(userModel);
                 if (!operationResult.Success)
-                    return Response(HttpStatusCode.BadRequest, operationResult.Message);
+                    return Response(HttpStatusCode.Unauthorized, operationResult.Message);
                 
                 return Response(HttpStatusCode.OK, operationResult.Message);
             }
@@ -71,23 +71,18 @@ namespace Financeasy.Api.Controllers
             return Response(HttpStatusCode.OK, userModel);
         }
 
-        [Route("profile/{id}")]
+        [Route("profile")]
         [HttpPut]
-        public HttpResponseMessage EditProfile([FromBody] UserEditProfileModel userModel, long id = 0)
+        public HttpResponseMessage EditProfile([FromBody] UserEditProfileModel userModel)
         {
             var auth = _authProvider.Authenticate(Request);
 
             if (!auth.IsAuthenticated)
                 return Response(auth.StatusCode, auth.Message);
 
-            if (id == 0)
-                return Response(HttpStatusCode.BadRequest, "Id inválido.");
-
-            if (id != userModel.Id)
-                return Response(HttpStatusCode.BadRequest, "Id inválido.");
-
             try
             {
+                userModel.Id = auth.UserId;
                 var operationResult = _userApplication.EditProfile(userModel);
                 if (!operationResult.Success)
                     return Response(HttpStatusCode.BadRequest, operationResult.Message);

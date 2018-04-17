@@ -127,6 +127,5 @@ C:\Arquivos\Projetos\Projeto Integrador\Financeasy\Financeasy.Api\bin\System.Web
 C:\Arquivos\Projetos\Projeto Integrador\Financeasy\Financeasy.Api\bin\pt-br\System.Net.Http.Formatting.resources.dll
 C:\Arquivos\Projetos\Projeto Integrador\Financeasy\Financeasy.Api\bin\pt-br\System.Web.Http.WebHost.resources.dll
 C:\Arquivos\Projetos\Projeto Integrador\Financeasy\Financeasy.Api\bin\pt-br\System.Web.Http.resources.dll
-C:\Arquivos\Projetos\Projeto Integrador\Financeasy\Financeasy.Api\obj\Debug\Financeasy.Api.csprojResolveAssemblyReference.cache
 C:\Arquivos\Projetos\Projeto Integrador\Financeasy\Financeasy.Api\obj\Debug\Financeasy.Api.dll
 C:\Arquivos\Projetos\Projeto Integrador\Financeasy\Financeasy.Api\obj\Debug\Financeasy.Api.pdb
