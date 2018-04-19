@@ -83,10 +83,7 @@ namespace Financeasy.Api.Applications
             if (userModel.Name.Length < 2 || userModel.Name.Length > 30)
                 return new OperationResult(false, "Nome deve conter no mínimo 2 caracteres e no máximo 30.");
 
-            if (string.IsNullOrWhiteSpace(userModel.Password) || string.IsNullOrWhiteSpace(userModel.PasswordConfirm))
-                return new OperationResult(false, "Confirme a senha para continuar.");
-
-            if (!string.IsNullOrWhiteSpace(userModel.Password) && !string.IsNullOrWhiteSpace(userModel.PasswordConfirm))
+            if (!string.IsNullOrWhiteSpace(userModel.Password) || !string.IsNullOrWhiteSpace(userModel.PasswordConfirm))
                 if (userModel.Password != userModel.PasswordConfirm)
                     return new OperationResult(false, "As senhas informadas não são iguais.");
 
