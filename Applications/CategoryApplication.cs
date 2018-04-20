@@ -43,9 +43,9 @@ namespace Financeasy.Api.Applications
             }
         }
 
-        public OperationResult Update(CategoryPutModel categoryModel)
+        public OperationResult Update(CategoryPutModel categoryModel, long userId)
         {
-            var currentCategory = FindById(categoryModel.Id);
+            var currentCategory = FindById(categoryModel.Id, userId);
 
             if (string.IsNullOrWhiteSpace(categoryModel.Name))
                 return new OperationResult(false, "Descrição inválida.");
@@ -86,10 +86,13 @@ namespace Financeasy.Api.Applications
             }
         }
 
-        public Category FindById(long id) => _repository.FindById(id);
+        public IEnumerable<Category> FindByType(CategoryType type, long userId) => 
+            GetAll(userId).Where(x => x.Type == type).ToList();
+        
+        public Category FindById(long id, long userId) =>
+            GetAll(userId).Where(x => x.Id == id).FirstOrDefault();
 
-        public IEnumerable<Category> FindByType(CategoryType type) => _repository.GetAll().Where(x => x.Type == type).ToList();
-
-        public IEnumerable<Category> GetAll() => _repository.GetAll().ToList();
+        public IQueryable<Category> GetAll(long userId) => 
+            _repository.GetAll().Where(x => x.UserId == userId);
     }
 }

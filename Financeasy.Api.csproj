@@ -145,6 +145,7 @@
     <Compile Include="Domain\Enums\UserStatus.cs" />
     <Compile Include="Domain\Models\Category\CategoryPostModel.cs" />
     <Compile Include="Domain\Models\Category\CategoryPutModel.cs" />
+    <Compile Include="Domain\Models\Customer\CustomerListModel.cs" />
     <Compile Include="Domain\Models\Customer\CustomerPutModel.cs" />
     <Compile Include="Domain\Models\Customer\CustomerPostModel.cs" />
     <Compile Include="Domain\Models\Expense\ExpensePostModel.cs" />

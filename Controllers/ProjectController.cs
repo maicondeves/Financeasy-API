@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
@@ -28,7 +29,7 @@ namespace Financeasy.Api.Controllers
             if (!auth.IsAuthenticated)
                 return Response(auth.StatusCode, auth.Message);
 
-            return Response(HttpStatusCode.OK, _projectApplication.GetAll());
+            return Response(HttpStatusCode.OK, _projectApplication.GetAll(auth.UserId).ToList());
         }
 
         [Route("{id}")]
@@ -43,7 +44,7 @@ namespace Financeasy.Api.Controllers
             if (id == 0)
                 return Response(HttpStatusCode.BadRequest, "Id inválido.");
 
-            var project = _projectApplication.FindById(id);
+            var project = _projectApplication.FindById(id, auth.UserId);
             return project == null ? Response(HttpStatusCode.NotFound, "Categoria não encontrada.") : Response(HttpStatusCode.OK, project);
         }
         
@@ -89,7 +90,7 @@ namespace Financeasy.Api.Controllers
 
             try
             {
-                var operationResult = _projectApplication.Update(projectModel);
+                var operationResult = _projectApplication.Update(projectModel, auth.UserId);
                 if (!operationResult.Success)
                     return Response(HttpStatusCode.BadRequest, operationResult.Message);
 
@@ -116,7 +117,7 @@ namespace Financeasy.Api.Controllers
 
             try
             {
-                var project = _projectApplication.FindById(id);
+                var project = _projectApplication.FindById(id, auth.UserId);
                 if (project == null)
                     return Response(HttpStatusCode.NotFound, "Categoria não encontrada.");
 

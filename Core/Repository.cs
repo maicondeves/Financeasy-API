@@ -12,13 +12,13 @@ namespace Financeasy.Api.Core
 
         public void Insert(TEntity entity) => Context.Set<TEntity>().Add(entity);
 
-        public void Delete(TEntity entity) => Context.Set<TEntity>().Remove(entity);
+        public void Delete(TEntity entity) => Context.Entry(entity).State = EntityState.Deleted;
 
         public void Update(TEntity entity) => Context.Entry(entity).State = EntityState.Modified;
 
         public IQueryable<TEntity> GetAll() => Context.Set<TEntity>().AsNoTracking().AsQueryable();
 
-        public TEntity FindById(object id) => Context.Set<TEntity>().Find(id);
+        //public TEntity FindById(object id) => Context.Set<TEntity>().Find(id);
 
         public void Save() => Context.SaveChanges();
 

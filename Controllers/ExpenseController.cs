@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
@@ -28,7 +29,7 @@ namespace Financeasy.Api.Controllers
             if (!auth.IsAuthenticated)
                 return Response(auth.StatusCode, auth.Message);
 
-            return Response(HttpStatusCode.OK, _expenseApplication.GetAll());
+            return Response(HttpStatusCode.OK, _expenseApplication.GetAll(auth.UserId).ToList());
         }
 
         [Route("{id}")]
@@ -43,7 +44,7 @@ namespace Financeasy.Api.Controllers
             if (id == 0)
                 return Response(HttpStatusCode.BadRequest, "Id inválido.");
 
-            var revenue = _expenseApplication.FindById(id);
+            var revenue = _expenseApplication.FindById(id, auth.UserId);
             return revenue == null ? Response(HttpStatusCode.NotFound, "Receita não encontrada.") : Response(HttpStatusCode.OK, revenue);
         }
 
@@ -89,7 +90,7 @@ namespace Financeasy.Api.Controllers
 
             try
             {
-                var operationResult = _expenseApplication.Update(expenseModel);
+                var operationResult = _expenseApplication.Update(expenseModel, auth.UserId);
                 if (!operationResult.Success)
                     return Response(HttpStatusCode.BadRequest, operationResult.Message);
 
@@ -116,7 +117,7 @@ namespace Financeasy.Api.Controllers
 
             try
             {
-                var revenue = _expenseApplication.FindById(id);
+                var revenue = _expenseApplication.FindById(id, auth.UserId);
                 if (revenue == null)
                     return Response(HttpStatusCode.NotFound, "Receita não encontrada.");
 

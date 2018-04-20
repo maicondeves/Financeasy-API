@@ -47,9 +47,9 @@ namespace Financeasy.Api.Applications
             }
         }
 
-        public OperationResult Update(CustomerPutModel customerModel)
+        public OperationResult Update(CustomerPutModel customerModel, long userId)
         {
-            var currentCustomer = FindById(customerModel.Id);
+            var currentCustomer = FindById(customerModel.Id, userId);
             if (currentCustomer == null)
                 return new OperationResult(false, "Cliente não encontrado.");
 
@@ -82,6 +82,15 @@ namespace Financeasy.Api.Applications
             }
         }
 
+        public OperationResult Delete(long id, long userId)
+        {
+            var customer = FindById(id, userId);
+            if (customer == null)
+                return new OperationResult(false, "Cliente não encontrado.");
+
+            return DeleteAndSave(customer);
+        }
+
         public OperationResult DeleteAndSave(Customer customer)
         {
             try
@@ -96,8 +105,20 @@ namespace Financeasy.Api.Applications
             }
         }
 
-        public Customer FindById(long id) => _repository.FindById(id);
+        public Customer FindById(long id, long userId) =>
+            GetAll(userId).Where(x => x.Id == id).FirstOrDefault();
 
-        public IEnumerable<Customer> GetAll() => _repository.GetAll().ToList();
+        public IEnumerable<CustomerListModel> GetList(long userId)
+        {
+            var customers = GetAll(userId).ToList();
+            var customersModel = customers.Select(x => new CustomerListModel()
+            {
+                Id = x.Id,
+                Name = x.Name
+            });
+            return customersModel;
+        }
+
+        public IQueryable<Customer> GetAll(long userId) => _repository.GetAll().Where(x => x.UserId == userId);
     }
 }

@@ -38,9 +38,9 @@ namespace Financeasy.Api.Applications
             }
         }
 
-        public OperationResult Update(ExpensePutModel model)
+        public OperationResult Update(ExpensePutModel model, long userId)
         {
-            var currentExpense = FindById(model.Id);
+            var currentExpense = FindById(model.Id, userId);
 
             //Validações aqui
 
@@ -77,8 +77,10 @@ namespace Financeasy.Api.Applications
             }
         }
 
-        public Expense FindById(long id) => _repository.FindById(id);
+        public Expense FindById(long id, long userId) =>
+            GetAll(userId).Where(x => x.Id == id).FirstOrDefault();
 
-        public IEnumerable<Expense> GetAll() => _repository.GetAll().ToList();
+        public IQueryable<Expense> GetAll(long userId) =>
+            _repository.GetAll().Where(x => x.UserId == userId);
     }
 }

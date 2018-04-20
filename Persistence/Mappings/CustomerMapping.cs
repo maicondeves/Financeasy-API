@@ -20,7 +20,7 @@ namespace Financeasy.Api.Persistence.Mappings
             Property(x => x.CellPhone).HasColumnName("CellPhone").HasColumnType("varchar").HasMaxLength(14).IsRequired();
             Property(x => x.CEP).HasColumnName("CEP").HasColumnType("varchar").HasMaxLength(14).IsRequired();
             Property(x => x.StreetAddress).HasColumnName("StreetAddress").HasColumnType("varchar").HasMaxLength(50).IsRequired();
-            Property(x => x.Complement).HasColumnName("Complement").HasColumnType("varchar").HasMaxLength(50).IsRequired();
+            Property(x => x.Complement).HasColumnName("Complement").HasColumnType("varchar").HasMaxLength(20).IsRequired();
             Property(x => x.District).HasColumnName("District").HasColumnType("varchar").HasMaxLength(50).IsRequired();
             Property(x => x.City).HasColumnName("City").HasColumnType("varchar").HasMaxLength(50).IsRequired();
             Property(x => x.State).HasColumnName("State").HasColumnType("varchar").HasMaxLength(2).IsRequired();

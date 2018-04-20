@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
@@ -29,7 +30,7 @@ namespace Financeasy.Api.Controllers
             if (!auth.IsAuthenticated)
                 return Response(auth.StatusCode, auth.Message);
 
-            return Response(HttpStatusCode.OK, _categoryApplication.GetAll());
+            return Response(HttpStatusCode.OK, _categoryApplication.GetAll(auth.UserId).ToList());
         }
 
         [Route("{id}")]
@@ -44,7 +45,7 @@ namespace Financeasy.Api.Controllers
             if (id == 0)
                 return Response(HttpStatusCode.BadRequest, "Id inválido.");
 
-            var category = _categoryApplication.FindById(id);
+            var category = _categoryApplication.FindById(id, auth.UserId);
             return category == null ? Response(HttpStatusCode.NotFound, "Categoria não encontrada.") : Response(HttpStatusCode.OK, category);
         }
 
@@ -60,7 +61,7 @@ namespace Financeasy.Api.Controllers
             if (!type.HasValue)
                 return Response(HttpStatusCode.BadRequest, "Tipo de categoria inválido.");
 
-            var categories = _categoryApplication.FindByType(type.Value);
+            var categories = _categoryApplication.FindByType(type.Value, auth.UserId);
             return categories == null ? Response(HttpStatusCode.NotFound, "Nenhuma categoria encontrada com este tipo.") : Response(HttpStatusCode.OK, categories);
         }
 
@@ -106,7 +107,7 @@ namespace Financeasy.Api.Controllers
 
             try
             {
-                var operationResult = _categoryApplication.Update(categoryModel);
+                var operationResult = _categoryApplication.Update(categoryModel, auth.UserId);
                 if (!operationResult.Success)
                     return Response(HttpStatusCode.BadRequest, operationResult.Message);
 
@@ -133,7 +134,7 @@ namespace Financeasy.Api.Controllers
 
             try
             {
-                var category = _categoryApplication.FindById(id);
+                var category = _categoryApplication.FindById(id, auth.UserId);
                 if (category == null)
                     return Response(HttpStatusCode.NotFound, "Categoria não encontrada.");
 

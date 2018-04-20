@@ -61,11 +61,11 @@ namespace Financeasy.Api.Applications
             }
         }
 
-        public User FindById(long id) => _repository.FindById(id);
+        public User FindById(long id) => GetAll().Where(x => x.Id == id).FirstOrDefault();
 
         public User FindByEmail(string email) => _repository.GetAll().Where(x => x.Email.Trim() == email.Trim()).ToList().FirstOrDefault();
 
-        public IEnumerable<User> GetAll() => _repository.GetAll().ToList();
+        public IEnumerable<User> GetList() => GetAll().ToList();
 
         public OperationResult EditProfile(UserEditProfileModel userModel)
         {
@@ -167,7 +167,9 @@ namespace Financeasy.Api.Applications
             
             return operationResult;
         }
-        
+
+        public IQueryable<User> GetAll() =>
+            _repository.GetAll();
 
         //private void BlockUser(User user)
         //{

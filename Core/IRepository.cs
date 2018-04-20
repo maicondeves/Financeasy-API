@@ -7,7 +7,7 @@ namespace Financeasy.Api.Core
         void Insert(TEntity entity);
         void Delete(TEntity entity);
 
-        TEntity FindById(object id);
+        //TEntity FindById(object id);
         IQueryable<TEntity> GetAll();
     }
 }

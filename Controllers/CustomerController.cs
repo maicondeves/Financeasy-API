@@ -28,7 +28,7 @@ namespace Financeasy.Api.Controllers
             if (!auth.IsAuthenticated)
                 return Response(auth.StatusCode, auth.Message);
 
-            return Response(HttpStatusCode.OK, _customerApplication.GetAll());
+            return Response(HttpStatusCode.OK, _customerApplication.GetList(auth.UserId));
         }
 
         [Route("{id}")]
@@ -43,7 +43,7 @@ namespace Financeasy.Api.Controllers
             if (id == 0)
                 return Response(HttpStatusCode.BadRequest, "Id inválido.");
 
-            var customer = _customerApplication.FindById(id);
+            var customer = _customerApplication.FindById(id, auth.UserId);
             return customer == null ? Response(HttpStatusCode.NotFound, "Cliente não encontrado.") : Response(HttpStatusCode.OK, customer);
         }
 
@@ -88,7 +88,7 @@ namespace Financeasy.Api.Controllers
 
             try
             {
-                var operationResult = _customerApplication.Update(customerModel);
+                var operationResult = _customerApplication.Update(customerModel, auth.UserId);
                 if (!operationResult.Success)
                     return Response(HttpStatusCode.BadRequest, operationResult.Message);
 
@@ -100,7 +100,7 @@ namespace Financeasy.Api.Controllers
             }
         }
 
-        [Route("")]
+        [Route("{id}")]
         [HttpDelete]
         public HttpResponseMessage Delete(long id = 0)
         {
@@ -114,11 +114,7 @@ namespace Financeasy.Api.Controllers
 
             try
             {
-                var customer = _customerApplication.FindById(id);
-                if (customer == null)
-                    return Response(HttpStatusCode.NotFound, "Cliente não encontrado.");
-
-                var operationResult = _customerApplication.DeleteAndSave(customer);
+                var operationResult = _customerApplication.Delete(id, auth.UserId);
                 if (!operationResult.Success)
                     return Response(HttpStatusCode.BadRequest, operationResult.Message);
 
