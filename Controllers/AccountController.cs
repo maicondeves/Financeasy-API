@@ -95,5 +95,17 @@ namespace Financeasy.Api.Controllers
             }
         }
 
+        [Route("profile/name")]
+        [HttpGet]
+        public HttpResponseMessage GetProfileName()
+        {
+            var auth = _authProvider.Authenticate(Request);
+
+            if (!auth.IsAuthenticated)
+                return Response(auth.StatusCode, auth.Message);
+
+            var user = _userApplication.FindById(auth.UserId);
+            return Response(HttpStatusCode.OK, user.Name);
+        }
     }
 }
