@@ -1,4 +1,5 @@
 ﻿using System;
+using Newtonsoft.Json;
 
 namespace Financeasy.Api.Domain.Entities
 {
@@ -22,10 +23,14 @@ namespace Financeasy.Api.Domain.Entities
         public string City { get; set; }
         public string State { get; set; }
 
+        [JsonIgnore]
         public DateTime? RegisterDate { get; set; }
+        [JsonIgnore]
         public DateTime? UpdateDate { get; set; }
 
         public long UserId { get; set; }
+
+        [JsonIgnore]
         public virtual User User { get; set; }
     }
 }

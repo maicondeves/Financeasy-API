@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Financeasy.Api.Domain.Enums;
+using Newtonsoft.Json;
 
 namespace Financeasy.Api.Domain.Entities
 {
@@ -20,7 +21,9 @@ namespace Financeasy.Api.Domain.Entities
         public string City { get; set; }
         public string State { get; set; }
 
+        [JsonIgnore]
         public DateTime RegisterDate { get; set; }
+        [JsonIgnore]
         public DateTime? UpdateDate { get; set; }
 
         public virtual ICollection<Revenue> Revenues { get; set; }
@@ -32,7 +35,9 @@ namespace Financeasy.Api.Domain.Entities
         public long CategoryId { get; set; }
         public virtual Category Category { get; set; }
 
+        [JsonIgnore]
         public long UserId { get; set; }
+        [JsonIgnore]
         public virtual User User { get; set; }
     }
 }
