@@ -4,6 +4,7 @@ using System.Linq;
 using Financeasy.Api.Core;
 using Financeasy.Api.Core.DI;
 using Financeasy.Api.Domain.Entities;
+using Financeasy.Api.Domain.Filters;
 using Financeasy.Api.Domain.Models;
 using Financeasy.Api.Persistence.Repositories;
 using Financeasy.Api.Utils.Extensions;
@@ -82,5 +83,8 @@ namespace Financeasy.Api.Applications
 
         public IQueryable<Expense> GetAll(long userId) =>
             _repository.GetAll().Where(x => x.UserId == userId);
+
+        public List<Expense> GetAllWithFilters(long userId, ExpenseFilter filter) => 
+            GetAll(userId).Where(x => x.ProjectId == filter.ProjectId && x.MonthPeriod == filter.MonthWork && x.YearPeriod == filter.YearWork).ToList();
     }
 }

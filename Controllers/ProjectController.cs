@@ -62,7 +62,7 @@ namespace Financeasy.Api.Controllers
                 projectModel.UserId = auth.UserId;
                 var operationResult = _projectApplication.Insert(projectModel);
                 if (!operationResult.Success)
-                    return Response(HttpStatusCode.BadRequest, operationResult.Message);
+                    return Response(HttpStatusCode.InternalServerError, operationResult.Message);
 
                 return Response(HttpStatusCode.OK, operationResult.Message);
             }
@@ -92,7 +92,7 @@ namespace Financeasy.Api.Controllers
             {
                 var operationResult = _projectApplication.Update(projectModel, auth.UserId);
                 if (!operationResult.Success)
-                    return Response(HttpStatusCode.BadRequest, operationResult.Message);
+                    return Response(HttpStatusCode.InternalServerError, operationResult.Message);
 
                 return Response(HttpStatusCode.OK, operationResult.Message);
             }
@@ -121,9 +121,13 @@ namespace Financeasy.Api.Controllers
                 if (project == null)
                     return Response(HttpStatusCode.NotFound, "Categoria não encontrada.");
 
+                var isValid = _projectApplication.SearchForRegisters(id, auth.UserId);
+                if (!isValid)
+                    return Response(HttpStatusCode.BadRequest, "Esse projeto não pode ser deletado pois possui receitas e despesas.");
+
                 var operationResult = _projectApplication.DeleteAndSave(project);
                 if (!operationResult.Success)
-                    return Response(HttpStatusCode.BadRequest, operationResult.Message);
+                    return Response(HttpStatusCode.InternalServerError, operationResult.Message);
 
                 return Response(HttpStatusCode.OK, operationResult.Message);
             }

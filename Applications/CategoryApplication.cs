@@ -16,6 +16,15 @@ namespace Financeasy.Api.Applications
         [Inject]
         private CategoryRepository _repository { get; set; }
 
+        [Inject]
+        private ProjectApplication _projectApplication { get; set; }
+
+        [Inject]
+        private RevenueApplication _revenueApplication { get; set; }
+
+        [Inject]
+        private ExpenseApplication _expenseApplication { get; set; }
+
         public OperationResult Insert(CategoryPostModel categoryModel)
         {
             if (string.IsNullOrWhiteSpace(categoryModel.Name))
@@ -94,5 +103,19 @@ namespace Financeasy.Api.Applications
 
         public IQueryable<Category> GetAll(long userId) => 
             _repository.GetAll().Where(x => x.UserId == userId);
+
+        public bool SearchForRegisters(long id, long userId)
+        {            
+            if (_projectApplication.GetAll(userId).Any(x => x.UserId == userId && x.CategoryId == id))
+                return false;
+
+            if (_revenueApplication.GetAll(userId).Any(x => x.UserId == userId && x.CategoryId == id))
+                return false;
+
+            if (_expenseApplication.GetAll(userId).Any(x => x.UserId == userId && x.CategoryId == id))
+                return false;
+
+            return true;
+        }
     }
 }

@@ -7,6 +7,7 @@ using Financeasy.Api.Applications;
 using Financeasy.Api.Authentication;
 using Financeasy.Api.Core;
 using Financeasy.Api.Core.DI;
+using Financeasy.Api.Domain.Filters;
 using Financeasy.Api.Domain.Models;
 
 namespace Financeasy.Api.Controllers
@@ -30,6 +31,21 @@ namespace Financeasy.Api.Controllers
                 return Response(auth.StatusCode, auth.Message);
 
             return Response(HttpStatusCode.OK, _expenseApplication.GetAll(auth.UserId).ToList());
+        }
+
+        [Route("project")]
+        [HttpPost]
+        public HttpResponseMessage GetAllWithFilters([FromBody] ExpenseFilter filter)
+        {
+            var auth = _authProvider.Authenticate(Request);
+
+            if (!auth.IsAuthenticated)
+                return Response(auth.StatusCode, auth.Message);
+
+            if (filter == null || filter.ProjectId == 0 || filter.MonthWork == 0 || filter.YearWork == 0)
+                return Response(HttpStatusCode.BadRequest, "Filtros inválidos.");
+
+            return Response(HttpStatusCode.OK, _expenseApplication.GetAllWithFilters(auth.UserId, filter));
         }
 
         [Route("{id}")]
@@ -62,7 +78,7 @@ namespace Financeasy.Api.Controllers
                 expenseModel.UserId = auth.UserId;
                 var operationResult = _expenseApplication.Insert(expenseModel);
                 if (!operationResult.Success)
-                    return Response(HttpStatusCode.BadRequest, operationResult.Message);
+                    return Response(HttpStatusCode.InternalServerError, operationResult.Message);
 
                 return Response(HttpStatusCode.OK, operationResult.Message);
             }
@@ -92,7 +108,7 @@ namespace Financeasy.Api.Controllers
             {
                 var operationResult = _expenseApplication.Update(expenseModel, auth.UserId);
                 if (!operationResult.Success)
-                    return Response(HttpStatusCode.BadRequest, operationResult.Message);
+                    return Response(HttpStatusCode.InternalServerError, operationResult.Message);
 
                 return Response(HttpStatusCode.OK, operationResult.Message);
             }
@@ -123,7 +139,7 @@ namespace Financeasy.Api.Controllers
 
                 var operationResult = _expenseApplication.DeleteAndSave(revenue);
                 if (!operationResult.Success)
-                    return Response(HttpStatusCode.BadRequest, operationResult.Message);
+                    return Response(HttpStatusCode.InternalServerError, operationResult.Message);
 
                 return Response(HttpStatusCode.OK, operationResult.Message);
             }

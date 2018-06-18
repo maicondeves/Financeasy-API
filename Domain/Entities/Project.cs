@@ -26,7 +26,9 @@ namespace Financeasy.Api.Domain.Entities
         [JsonIgnore]
         public DateTime? UpdateDate { get; set; }
 
+        [JsonIgnore]
         public virtual ICollection<Revenue> Revenues { get; set; }
+        [JsonIgnore]
         public virtual ICollection<Expense> Expenses { get; set; }
 
         public long CustomerId { get; set; }

@@ -16,6 +16,9 @@ namespace Financeasy.Api.Applications
         [Inject]
         private CustomerRepository _repository { get; set; }
 
+        [Inject]
+        private ProjectApplication _projectApplication { get; set; }
+
         public OperationResult Insert(CustomerPostModel customerModel)
         {
             //Fazer as validações aqui.
@@ -120,5 +123,8 @@ namespace Financeasy.Api.Applications
         }
 
         public IQueryable<Customer> GetAll(long userId) => _repository.GetAll().Where(x => x.UserId == userId);
+
+        public bool SearchForRegisters(long id, long userId) => 
+            !_projectApplication.GetAll(userId).Any(x => x.UserId == userId && x.CustomerId == id);
     }
 }

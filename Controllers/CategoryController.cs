@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using Financeasy.Api.Applications;
 using Financeasy.Api.Authentication;
@@ -51,7 +52,7 @@ namespace Financeasy.Api.Controllers
 
         [Route("types/{type}")]
         [HttpGet]
-        public HttpResponseMessage GetByType(CategoryType? type)
+        public async Task<HttpResponseMessage> GetByType(CategoryType? type)
         {
             var auth = _authProvider.Authenticate(Request);
 
@@ -79,7 +80,7 @@ namespace Financeasy.Api.Controllers
                 categoryModel.UserId = auth.UserId;
                 var operationResult = _categoryApplication.Insert(categoryModel);
                 if (!operationResult.Success)
-                    return Response(HttpStatusCode.BadRequest, operationResult.Message);
+                    return Response(HttpStatusCode.InternalServerError, operationResult.Message);
 
                 return Response(HttpStatusCode.OK, operationResult.Message);
             }
@@ -109,7 +110,7 @@ namespace Financeasy.Api.Controllers
             {
                 var operationResult = _categoryApplication.Update(categoryModel, auth.UserId);
                 if (!operationResult.Success)
-                    return Response(HttpStatusCode.BadRequest, operationResult.Message);
+                    return Response(HttpStatusCode.InternalServerError, operationResult.Message);
 
                 return Response(HttpStatusCode.OK, operationResult.Message);
             }
@@ -138,9 +139,13 @@ namespace Financeasy.Api.Controllers
                 if (category == null)
                     return Response(HttpStatusCode.NotFound, "Categoria não encontrada.");
 
+                var isValid = _categoryApplication.SearchForRegisters(id, auth.UserId);
+                if (!isValid)
+                    return Response(HttpStatusCode.BadRequest, "Essa categoria não pode ser deletada pois está sendo utilizada em algum projeto, receita ou despesa.");
+                
                 var operationResult = _categoryApplication.DeleteAndSave(category);
                 if (!operationResult.Success)
-                    return Response(HttpStatusCode.BadRequest, operationResult.Message);
+                    return Response(HttpStatusCode.InternalServerError, operationResult.Message);
 
                 return Response(HttpStatusCode.OK, operationResult.Message);
             }

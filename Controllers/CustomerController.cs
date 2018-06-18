@@ -61,7 +61,7 @@ namespace Financeasy.Api.Controllers
                 customerModel.UserId = auth.UserId;
                 var operationResult = _customerApplication.Insert(customerModel);
                 if (!operationResult.Success)
-                    return Response(HttpStatusCode.BadRequest, operationResult.Message);
+                    return Response(HttpStatusCode.InternalServerError, operationResult.Message);
 
                 return Response(HttpStatusCode.OK, operationResult.Message);
             }
@@ -90,7 +90,7 @@ namespace Financeasy.Api.Controllers
             {
                 var operationResult = _customerApplication.Update(customerModel, auth.UserId);
                 if (!operationResult.Success)
-                    return Response(HttpStatusCode.BadRequest, operationResult.Message);
+                    return Response(HttpStatusCode.InternalServerError, operationResult.Message);
 
                 return Response(HttpStatusCode.OK, operationResult.Message);
             }
@@ -114,9 +114,13 @@ namespace Financeasy.Api.Controllers
 
             try
             {
+                var isValid = _customerApplication.SearchForRegisters(id, auth.UserId);
+                if (!isValid)
+                    return Response(HttpStatusCode.BadRequest, "Esse cliente não pode ser deletado pois está sendo utilizada em algum projeto.");
+
                 var operationResult = _customerApplication.Delete(id, auth.UserId);
                 if (!operationResult.Success)
-                    return Response(HttpStatusCode.BadRequest, operationResult.Message);
+                    return Response(HttpStatusCode.InternalServerError, operationResult.Message);
 
                 return Response(HttpStatusCode.OK, operationResult.Message);
             }

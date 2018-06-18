@@ -28,7 +28,7 @@ namespace Financeasy.Api.Controllers
             {
                 var operationResult = _userApplication.Register(userModel);
                 if (!operationResult.Success)
-                    return Response(HttpStatusCode.BadRequest, operationResult.Message);
+                    return Response(HttpStatusCode.InternalServerError, operationResult.Message);
                 
                 return Response(HttpStatusCode.OK, operationResult.Message);
             }
@@ -85,7 +85,7 @@ namespace Financeasy.Api.Controllers
                 userModel.Id = auth.UserId;
                 var operationResult = _userApplication.EditProfile(userModel);
                 if (!operationResult.Success)
-                    return Response(HttpStatusCode.BadRequest, operationResult.Message);
+                    return Response(HttpStatusCode.InternalServerError, operationResult.Message);
 
                 return Response(HttpStatusCode.OK, operationResult.Message);
             }
