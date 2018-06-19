@@ -99,5 +99,10 @@ namespace Financeasy.Api.Applications
 
             return true;
         }
+
+        public List<ProjectCategoryModel> GetProjectsPerCategory(long userId)
+        {
+            return _repository.GetProjectPerCategory(userId);
+        }
     }
 }

@@ -85,3 +85,5 @@ C:\Arquivos\Projetos\Projeto Integrador\Financeasy\Financeasy.Api\bin\pt-br\Syst
 C:\Arquivos\Projetos\Projeto Integrador\Financeasy\Financeasy.Api\obj\Release\Financeasy.Api.dll
 C:\Arquivos\Projetos\Projeto Integrador\Financeasy\Financeasy.Api\obj\Release\Financeasy.Api.pdb
 C:\Arquivos\Projetos\Projeto Integrador\Financeasy\Financeasy.Api\obj\Release\Financeasy.Api.csprojResolveAssemblyReference.cache
+C:\Arquivos\Projetos\Projeto Integrador\Financeasy\Financeasy.Api\bin\Dapper.dll
+C:\Arquivos\Projetos\Projeto Integrador\Financeasy\Financeasy.Api\bin\Dapper.xml

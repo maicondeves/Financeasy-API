@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Financeasy.Api.Core;
 using Financeasy.Api.Core.DI;
 using Financeasy.Api.Domain.Entities;
+using Financeasy.Api.Domain.Enums;
 using Financeasy.Api.Domain.Filters;
 using Financeasy.Api.Domain.Models;
 using Financeasy.Api.Persistence.Repositories;
@@ -86,5 +88,17 @@ namespace Financeasy.Api.Applications
 
         public List<Expense> GetAllWithFilters(long userId, ExpenseFilter filter) => 
             GetAll(userId).Where(x => x.ProjectId == filter.ProjectId && x.MonthPeriod == filter.MonthWork && x.YearPeriod == filter.YearWork).ToList();
+
+        public List<ExpenseCategoryModel> GetExpensesPerCategory(long userId)
+        {
+            return _repository.GetExpensesPerCategory(userId);
+        }
+
+        public List<Expense> GetExpensesCloseToExpiration(long userId)
+        {
+            var dataDe = DateTime.Now;
+            var dataAte = DateTime.Now.AddDays(7);
+            return GetAll(userId).Where(x => x.ExpirationDate >= dataDe && x.ExpirationDate <= dataAte && x.Status == ExpenseStatus.Aberto).ToList();
+        }
     }
 }

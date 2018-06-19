@@ -86,5 +86,10 @@ namespace Financeasy.Api.Applications
 
         public List<Revenue> GetAllWithFilters(long userId, RevenueFilter filter) =>
             GetAll(userId).Where(x => x.ProjectId == filter.ProjectId && x.MonthPeriod == filter.MonthWork && x.YearPeriod == filter.YearWork).ToList();
+
+        public List<RevenueCategoryModel> GetRevenuesPerCategory(long userId)
+        {
+            return _repository.GetRevenuesPerCategory(userId);
+        }
     }
 }

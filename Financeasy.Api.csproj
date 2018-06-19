@@ -46,6 +46,9 @@
     <Reference Include="CryptSharp, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\CryptSharpOfficial.2.1.0.0\lib\CryptSharp.dll</HintPath>
     </Reference>
+    <Reference Include="Dapper, Version=1.50.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapper.1.50.5\lib\net451\Dapper.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
@@ -55,6 +58,7 @@
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.8.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -66,6 +70,8 @@
     </Reference>
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Data" />
     <Reference Include="System.IO, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.IO.4.3.0\lib\net462\System.IO.dll</HintPath>
     </Reference>
@@ -91,6 +97,8 @@
     <Reference Include="System.Web.Http.WebHost, Version=5.2.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.4\lib\net45\System.Web.Http.WebHost.dll</HintPath>
     </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Web.Cors, Version=5.2.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -110,6 +118,7 @@
   <ItemGroup>
     <Compile Include="Applications\CategoryApplication.cs" />
     <Compile Include="Applications\CustomerApplication.cs" />
+    <Compile Include="Applications\DashboardApplication.cs" />
     <Compile Include="Applications\ExpenseApplication.cs" />
     <Compile Include="Applications\ProjectApplication.cs" />
     <Compile Include="Applications\RevenueApplication.cs" />
@@ -121,6 +130,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CategoryController.cs" />
     <Compile Include="Controllers\CustomerController.cs" />
+    <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\ExpenseController.cs" />
     <Compile Include="Controllers\ProjectController.cs" />
     <Compile Include="Controllers\RevenueController.cs" />
@@ -144,12 +154,18 @@
     <Compile Include="Domain\Enums\RevenueStatus.cs" />
     <Compile Include="Domain\Enums\UserStatus.cs" />
     <Compile Include="Domain\Filters\ExpenseFilter.cs" />
+    <Compile Include="Domain\Filters\ProjectFilter.cs" />
     <Compile Include="Domain\Filters\RevenueFilter.cs" />
     <Compile Include="Domain\Models\Category\CategoryPostModel.cs" />
     <Compile Include="Domain\Models\Category\CategoryPutModel.cs" />
     <Compile Include="Domain\Models\Customer\CustomerListModel.cs" />
     <Compile Include="Domain\Models\Customer\CustomerPutModel.cs" />
     <Compile Include="Domain\Models\Customer\CustomerPostModel.cs" />
+    <Compile Include="Domain\Models\Dashboard\DashboardDataModel.cs" />
+    <Compile Include="Domain\Models\Dashboard\DashboardModel.cs" />
+    <Compile Include="Domain\Models\Dashboard\ExpenseCategoryModel.cs" />
+    <Compile Include="Domain\Models\Dashboard\ProjectCategoryModel.cs" />
+    <Compile Include="Domain\Models\Dashboard\RevenueCategoryModel.cs" />
     <Compile Include="Domain\Models\Expense\ExpensePostModel.cs" />
     <Compile Include="Domain\Models\Expense\ExpensePutModel.cs" />
     <Compile Include="Domain\Models\Project\ProjectPostModel.cs" />

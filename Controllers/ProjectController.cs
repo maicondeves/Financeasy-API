@@ -7,6 +7,7 @@ using Financeasy.Api.Applications;
 using Financeasy.Api.Authentication;
 using Financeasy.Api.Core;
 using Financeasy.Api.Core.DI;
+using Financeasy.Api.Domain.Filters;
 using Financeasy.Api.Domain.Models;
 
 namespace Financeasy.Api.Controllers
@@ -45,9 +46,9 @@ namespace Financeasy.Api.Controllers
                 return Response(HttpStatusCode.BadRequest, "Id inválido.");
 
             var project = _projectApplication.FindById(id, auth.UserId);
-            return project == null ? Response(HttpStatusCode.NotFound, "Categoria não encontrada.") : Response(HttpStatusCode.OK, project);
+            return project == null ? Response(HttpStatusCode.NotFound, "Projeto não encontrado.") : Response(HttpStatusCode.OK, project);
         }
-        
+
         [Route("")]
         [HttpPost]
         public HttpResponseMessage Post([FromBody] ProjectPostModel projectModel)
