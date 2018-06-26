@@ -19,5 +19,11 @@ namespace Financeasy.Api.Persistence.Repositories
             using (var conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Default"].ConnectionString))
                 return conn.Query<ExpenseCategoryModel>("SELECT T1.Name AS CategoryName, Sum(T2.Amount) AS TotalAmount FROM Category T1 INNER JOIN Expense T2 ON (T2.CategoryId = T1.Id) WHERE T1.UserId = @UserId AND T2.UserId = @UserId AND T2.MonthPeriod = @Month AND T2.YearPeriod = @Year GROUP BY T1.Name;", new { UserId = userId, Month = DateTime.Now.Month, Year = DateTime.Now.Year }).ToList();
         }
+
+        public decimal GetTotalExpenses(long userId)
+        {
+            using (var conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Default"].ConnectionString))
+                return conn.Query<decimal>("SELECT IsNull(Sum(Amount), 0) AS decimal FROM Expense WHERE UserId = @UserId AND MonthPeriod = @Month AND YearPeriod = @Year;", new { UserId = userId, Month = DateTime.Now.Month, Year = DateTime.Now.Year }).FirstOrDefault();
+        }
     }
 }

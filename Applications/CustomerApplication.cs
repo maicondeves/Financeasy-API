@@ -77,7 +77,7 @@ namespace Financeasy.Api.Applications
                 customer.UpdateDate = DateTime.Now;
                 _repository.Update(customer);
                 _repository.Save();
-                return new OperationResult(true, "Usuário atualizado com sucesso.");
+                return new OperationResult(true, "Cliente atualizado com sucesso.");
             }
             catch (Exception e)
             {

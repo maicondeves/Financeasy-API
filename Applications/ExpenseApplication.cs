@@ -100,5 +100,10 @@ namespace Financeasy.Api.Applications
             var dataAte = DateTime.Now.AddDays(7);
             return GetAll(userId).Where(x => x.ExpirationDate >= dataDe && x.ExpirationDate <= dataAte && x.Status == ExpenseStatus.Aberto).ToList();
         }
+
+        public decimal GetTotalExpenses(long userId)
+        {
+            return _repository.GetTotalExpenses(userId);
+        }
     }
 }

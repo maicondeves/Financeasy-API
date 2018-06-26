@@ -233,8 +233,8 @@ namespace Financeasy.Api.Utils.Extensions
                 ExpirationDate = model.ExpirationDate,
                 PaymentAmount = model.PaymentAmount,
                 PaymentDate = model.PaymentDate,
-                MonthPeriod = (Month) model.ExpirationDate.Month,
-                YearPeriod = (short) model.ExpirationDate.Year,
+                MonthPeriod = model.MonthPeriod,
+                YearPeriod = model.YearPeriod,
                 CategoryId = model.CategoryId,
                 ProjectId = model.ProjectId,
                 RegisterDate = DateTime.Now,
@@ -254,8 +254,8 @@ namespace Financeasy.Api.Utils.Extensions
             currentRevenue.ExpirationDate = model.ExpirationDate;
             currentRevenue.PaymentAmount = model.PaymentAmount;
             currentRevenue.PaymentDate = model.PaymentDate;
-            currentRevenue.MonthPeriod = (Month)model.ExpirationDate.Month;
-            currentRevenue.YearPeriod = (short)model.ExpirationDate.Year;
+            currentRevenue.MonthPeriod = model.MonthPeriod;
+            currentRevenue.YearPeriod = model.YearPeriod;
             currentRevenue.CategoryId = model.CategoryId;
             return currentRevenue;
         }

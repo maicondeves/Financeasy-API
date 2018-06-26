@@ -19,8 +19,8 @@ namespace Financeasy.Api.Applications
 
         public DashboardModel GetDashboard(long userId)
         {
-            var totalExpense = _expenseApplication.GetAll(userId).Where(x => x.MonthPeriod == (Month) DateTime.Now.Month && x.YearPeriod == DateTime.Now.Year).Sum(x => x.Amount);
-            var totalRevenue = _revenueApplication.GetAll(userId).Where(x => x.MonthPeriod == (Month) DateTime.Now.Month && x.YearPeriod == DateTime.Now.Year).Sum(x => x.ReceivableAmount);
+            var totalExpense = _expenseApplication.GetTotalExpenses(userId);
+            var totalRevenue = _revenueApplication.GetTotalRevenues(userId);
             var balance = totalRevenue - totalExpense;
 
             var totalProjectPerCategory = new DashboardDataModel();

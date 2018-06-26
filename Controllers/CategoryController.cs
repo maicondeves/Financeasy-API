@@ -52,7 +52,7 @@ namespace Financeasy.Api.Controllers
 
         [Route("types/{type}")]
         [HttpGet]
-        public async Task<HttpResponseMessage> GetByType(CategoryType? type)
+        public HttpResponseMessage GetByType(CategoryType? type)
         {
             var auth = _authProvider.Authenticate(Request);
 

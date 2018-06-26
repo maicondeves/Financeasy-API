@@ -91,5 +91,10 @@ namespace Financeasy.Api.Applications
         {
             return _repository.GetRevenuesPerCategory(userId);
         }
+
+        public decimal GetTotalRevenues(long userId)
+        {
+            return _repository.GetTotalRevenues(userId);
+        }
     }
 }
